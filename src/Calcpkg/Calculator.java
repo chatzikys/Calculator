@@ -1,27 +1,17 @@
 package Calcpkg;
 import java.util.*;
-import javax.swing.JOptionPane;
 
 public class Calculator {
-    public String expression;
-    public Queue<String> output = new LinkedList<>();
-    public ArrayList<String> tokens = new ArrayList<>();
-    public Stack<Character> operatorStack = new Stack<>();
+    private String expression;
+    private Queue<String> output = new LinkedList<>();
+    private ArrayList<String> tokens = new ArrayList<>();
+    private Stack<Character> operatorStack = new Stack<>();
 
-    public Stack<Double> compute = new Stack<>();
+    private Stack<Double> compute = new Stack<>();
 
 
     public Calculator() {
-        this.expression = JOptionPane.showInputDialog("");
-        JOptionPane.showMessageDialog(null, "The answer is : " + process());
-    }
 
-    private Double process() {
-        if(!(expression == null)) {
-            infixToRPN();
-            return computePRN();
-        }
-        return null;
     }
 
     public int getOrder(Character c) {
@@ -58,7 +48,7 @@ public class Calculator {
         while (!tokens.isEmpty()) {
             char op;
             try {
-                int i = Integer.parseInt(tokens.getFirst());
+                Integer.parseInt(tokens.getFirst());
                 output.add(tokens.getFirst());
                 tokens.removeFirst();
                 continue;
@@ -115,5 +105,13 @@ public class Calculator {
             }
         }
         return compute.pop();
+    }
+    public Double evaluateExpression(String text) {
+        this.expression = text;
+        if(!(expression.isBlank())) {
+            infixToRPN();
+            return computePRN();
+        }
+        return null;
     }
 }
