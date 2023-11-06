@@ -11,7 +11,7 @@ public class Calculator {
     public Stack<Double> compute = new Stack<>();
 
 
-    public Calculator(String expression) {
+    public Calculator() {
         this.expression = JOptionPane.showInputDialog("");
         JOptionPane.showMessageDialog(null, "The answer is : " + process());
     }

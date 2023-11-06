@@ -2,7 +2,7 @@ import Calcpkg.Calculator;
 
 public class Main {
     public static void main(String[] args) {
-        Calculator c = new Calculator("114^(1/2)");
+        Calculator c = new Calculator();
         c.infixToRPN();
         c.computePRN();
     }
