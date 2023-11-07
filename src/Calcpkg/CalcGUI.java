@@ -26,7 +26,7 @@ public class CalcGUI extends JFrame {
                 "cos(", "ln(", "7", "8", "9", "/",
                 "tan(", "√", "4", "5", "6", "*",
                 "π", "^", "1", "2", "3", "-",
-                "e", "Ans", "0", ".", "=", "+",
+                "^-1", "Ans", "0", ".", "=", "+",
         };
 
         for (String c : buttonChars) {
@@ -66,6 +66,8 @@ public class CalcGUI extends JFrame {
             inputField.setText(inputField.getText() + result);
         } else if (buttonLabel.equals("Ans")) {
             inputField.setText("Error");
+        } else if (buttonLabel.equals("^-1")) {
+            inputField.setText(inputField.getText() + "arc");
         } else {
             inputField.setText(inputField.getText() + buttonLabel);
         }

@@ -9,25 +9,20 @@ public class Calculator {
     private final Stack<String> operatorStack = new Stack<>();
     private final Stack<Double> compute = new Stack<>();
     private final double PI = 3.14159265358979311599796346854;
-
-
     public Calculator() {
-
     }
-
     public int getOrder(String c) {
         return switch (c) {
             case "+", "-" -> 1;
             case "*", "/" -> 2;
             case "^", "√" -> 3;
-            case "sin", "cos", "tan", "°", "ln" -> 4;
+            case "sin", "cos", "tan", "°", "ln","arcsin", "arcos", "arctan" -> 4;
             default -> -1;
         };
 
     }
-
-    public double evaluate(double a, double b, String op) {
-        return switch (op) {
+    public double evaluate(double a, double b, String operator) {
+        return switch (operator) {
             case "+" -> a + b;
             case "-" -> a - b;
             case "*" -> a * b;
@@ -39,22 +34,21 @@ public class Calculator {
             case "tan" -> Math.tan(a);
             case "ln" -> Math.log(a);
             case "°" -> a * PI / 180;
+            case "arcsin" -> Math.asin(a);
+            case "arccos" -> Math.acos(a);
+            case "arctan" -> Math.atan(a);
             default -> -1;
         };
     }
-
     public void infixToRPN() {
         if (expression.isBlank()) {
             System.out.println("Expression Is Blank");
             return;
         }
-        StringTokenizer exp = new StringTokenizer(expression, "(+ -*/^√°)", true);
-        while (exp.hasMoreTokens()) {
-            tokens.add(exp.nextToken());
-        }
+        tokenizeExpression();
         //System.out.println(tokens);
         while (!tokens.isEmpty()) {
-            String op;
+            String operator;
             try {
                 Double.parseDouble(tokens.getFirst());
                 output.add(tokens.getFirst());
@@ -63,21 +57,21 @@ public class Calculator {
 
             } catch (Exception e) {
                 //System.out.println(e);
-                op = tokens.getFirst();
+                operator = tokens.getFirst();
                 tokens.removeFirst();
             }
-            if (Objects.equals(op, " ")) {
+            if (Objects.equals(operator, " ")) {
                 break;
-            } else if (Objects.equals(op, "π")) {
+            } else if (Objects.equals(operator, "π")) {
                 output.add(String.valueOf(PI));
-            } else if (!Objects.equals(op, "(") && !Objects.equals(op, ")")) {
-                while (!operatorStack.isEmpty() && getOrder(operatorStack.peek()) >= getOrder(op)) {
+            } else if (!Objects.equals(operator, "(") && !Objects.equals(operator, ")")) {
+                while (!operatorStack.isEmpty() && getOrder(operatorStack.peek()) >= getOrder(operator)) {
                     output.add(String.valueOf(operatorStack.pop()));
                 }
-                operatorStack.push(op);
-            } else if (Objects.equals(op, "(")) {
-                operatorStack.push(op);
-            } else if (Objects.equals(op, ")")) {
+                operatorStack.push(operator);
+            } else if (Objects.equals(operator, "(")) {
+                operatorStack.push(operator);
+            } else if (Objects.equals(operator, ")")) {
                 while (!operatorStack.isEmpty() && !operatorStack.peek().equals("(")) {
                     output.add(String.valueOf(operatorStack.pop()));
                 }
@@ -87,7 +81,6 @@ public class Calculator {
                 } else if (Objects.equals(operatorStack.peek(), "(")) {
                     operatorStack.pop();
                 }
-
             }
         }
         while (!operatorStack.isEmpty())
@@ -96,8 +89,15 @@ public class Calculator {
         System.out.println(output);
     }
 
-    public double computePRN() {
-        String op;
+    private void tokenizeExpression() {
+        StringTokenizer exp = new StringTokenizer(expression, "(+ -*/^√°)", true);//Tokenizes the initial expression.
+        while (exp.hasMoreTokens()) {
+            tokens.add(exp.nextToken());
+        }
+    }
+
+    public double evaluateRPN() {
+        String operator;
         while (!output.isEmpty()) {
             String item = output.poll();
             if (item != null) {
@@ -105,33 +105,31 @@ public class Calculator {
                     double d = Double.parseDouble(item);
                     compute.push(d);
                 } catch (NumberFormatException e) {
-                    op = item;
-                    if (singleParam(op)) {
+                    operator = item;
+                    if (singleParam(operator)) {
                         double a = compute.pop();
-                        compute.push(evaluate(a, a, op));
+                        compute.push(evaluate(a, a, operator));
                     } else {
                         double b = compute.pop();
                         double a = compute.pop(); // A is the 1st term.
-                        compute.push(evaluate(a, b, op));
+                        compute.push(evaluate(a, b, operator));
                     }
                 }
             }
         }
         return compute.pop();
     }
-
-    private boolean singleParam(String op) {
-        return switch (op) {
-            case "sin", "cos", "tan", "√", "°", "ln" -> true;
+    private boolean singleParam(String operator) {
+        return switch (operator) {
+            case "sin", "cos", "tan", "√", "°", "ln","arcsin", "arcos", "arctan" -> true;
             default -> false;
         };
     }
-
     public Double evaluateExpression(String text) {
         this.expression = text;
         if (!(expression.isBlank())) {
             infixToRPN();
-            return computePRN();
+            return evaluateRPN();
         }
         return null;
     }
