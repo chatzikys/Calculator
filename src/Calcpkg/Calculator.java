@@ -2,12 +2,11 @@ package Calcpkg;
 import java.util.*;
 
 public class Calculator {
-    private String expression;
-    private Queue<String> output = new LinkedList<>();
-    private ArrayList<String> tokens = new ArrayList<>();
-    private Stack<Character> operatorStack = new Stack<>();
-
-    private Stack<Double> compute = new Stack<>();
+    private  String expression;
+    private  Queue<String> output = new LinkedList<>();
+    private  ArrayList<String> tokens = new ArrayList<>();
+    private  Stack<Character> operatorStack = new Stack<>();
+    private  Stack<Double> compute = new Stack<>();
 
 
     public Calculator() {
@@ -19,18 +18,25 @@ public class Calculator {
             case '+', '-' -> 1;
             case '*', '/' -> 2;
             case '^', '√' -> 3;
+            case 's', 'c', 't', '°','l' -> 4;
             default -> -1;
         };
 
     }
 
-    public double calculate(double a, double b, char op) {
+    public double evaluate(double a, double b, char op) {
         return switch (op) {
             case '+' -> a + b;
             case '-' -> a - b;
             case '*' -> a * b;
             case '/' -> a / b;
             case '^' -> Math.pow(a, b);
+            case '√' -> Math.sqrt(a);
+            case 's' -> Math.sin(a);
+            case 'c' -> Math.cos(a);
+            case 't' -> Math.tan(a);
+            case 'l' -> Math.log(a);
+            case '°' -> a*3.14159265359/180;
             default -> -1;
         };
     }
@@ -40,7 +46,7 @@ public class Calculator {
             System.out.println("Expression Is Blank");
             return;
         }
-        StringTokenizer exp = new StringTokenizer(expression, "(+-*/^√ )", true);
+        StringTokenizer exp = new StringTokenizer(expression, "(+ -*/^√°)", true);
         while (exp.hasMoreTokens()) {
             tokens.add(exp.nextToken());
         }
@@ -48,7 +54,7 @@ public class Calculator {
         while (!tokens.isEmpty()) {
             char op;
             try {
-                Integer.parseInt(tokens.getFirst());
+                Double.parseDouble(tokens.getFirst());
                 output.add(tokens.getFirst());
                 tokens.removeFirst();
                 continue;
@@ -98,14 +104,29 @@ public class Calculator {
                     compute.push(d);
                 } catch (NumberFormatException e) {
                     op = item.charAt(0);
-                    double b = compute.pop();
-                    double a = compute.pop(); // A is the 1st term.
-                    compute.push(calculate(a, b, op));
+                    if(singleParam(op))
+                    {
+                        double a = compute.pop();
+                        compute.push(evaluate(a, a, op));
+                    }
+                    else {
+                        double b = compute.pop();
+                        double a = compute.pop(); // A is the 1st term.
+                        compute.push(evaluate(a, b, op));
+                    }
                 }
             }
         }
         return compute.pop();
     }
+
+    private boolean singleParam(char op) {
+        return switch (op) {
+            case 's', 'c', 't', '√','°','l' -> true;
+            default -> false;
+        };
+    }
+
     public Double evaluateExpression(String text) {
         this.expression = text;
         if(!(expression.isBlank())) {
