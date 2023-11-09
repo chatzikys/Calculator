@@ -8,18 +8,21 @@ public class Calculator {
     private final ArrayList<String> tokens = new ArrayList<>();
     private final Stack<String> operatorStack = new Stack<>();
     private final Stack<Double> compute = new Stack<>();
+
     public Calculator() {
     }
+
     public int getOrder(String c) {
         return switch (c) {
             case "+", "-" -> 1;
             case "*", "/" -> 2;
             case "^", "√" -> 3;
-            case "sin", "cos", "tan", "°", "ln","arcsin", "arcos", "arctan","sinh","cosh","tanh" -> 4;
+            case "sin", "cos", "tan", "°", "ln", "arcsin", "arcos", "arctan", "sinh", "cosh", "tanh" -> 4;
             default -> -1;
         };
 
     }
+
     public double evaluate(double a, double b, String operator) {
         return switch (operator) {
             case "+" -> a + b;
@@ -42,6 +45,7 @@ public class Calculator {
             default -> -1;
         };
     }
+
     public void infixToRPN() {
         if (expression.isBlank()) {
             System.out.println("Expression Is Blank");
@@ -66,7 +70,7 @@ public class Calculator {
                 break;
             } else if (Objects.equals(operator, "π")) {
                 output.add(String.valueOf(Math.PI));
-            }else if (Objects.equals(operator, "e")) {
+            } else if (Objects.equals(operator, "e")) {
                 output.add(String.valueOf(Math.exp(1)));
             } else if (!Objects.equals(operator, "(") && !Objects.equals(operator, ")")) {
                 while (!operatorStack.isEmpty() && getOrder(operatorStack.peek()) >= getOrder(operator)) {
@@ -101,32 +105,26 @@ public class Calculator {
         fixMinus();
     }
 
-    private void fixMinus()
-    {
+    private void fixMinus() {
         for (int i = 0; i < tokens.size(); i++) {
-            if(!Objects.equals(tokens.get(i), "-"))
-            {
-                continue;
-            }
-            else if(i == 0)
-            {
+            if (!Objects.equals(tokens.get(i), "-")) {
+            } else if (i == 0) {
                 tokens.add(0, "0");
-                continue;
-            }
-            else if(!isDouble(tokens.get(i-1)))
-            {
+            } else if (!isDouble(tokens.get(i - 1))) {
                 tokens.add(i, "0");
-           }
+            }
         }
     }
+
     public boolean isDouble(String input) {
         try {
             Double.parseDouble(input);
             return true;
-            } catch (Exception e) {
-                return false;
-            }
+        } catch (Exception e) {
+            return false;
         }
+    }
+
     public double evaluateRPN() {
         String operator;
         while (!output.isEmpty()) {
@@ -150,12 +148,14 @@ public class Calculator {
         }
         return compute.pop();
     }
+
     private boolean singleParam(String operator) {
         return switch (operator) {
-            case "sin", "cos", "tan", "√", "°", "ln","arcsin", "arcos", "arctan", "sinh","cosh","tanh"-> true;
+            case "sin", "cos", "tan", "√", "°", "ln", "arcsin", "arcos", "arctan", "sinh", "cosh", "tanh" -> true;
             default -> false;
         };
     }
+
     public Double evaluateExpression(String text) {
         this.expression = text;
         if (!(expression.isBlank())) {
