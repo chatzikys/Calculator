@@ -47,18 +47,25 @@ public class Calculator {
         }
         tokenizeExpression();
         //System.out.println(tokens);
+        boolean lastWasDouble = false;
         while (!tokens.isEmpty()) {
             String operator;
             try {
                 Double.parseDouble(tokens.getFirst());
                 output.add(tokens.getFirst());
+                lastWasDouble = true;
                 tokens.removeFirst();
                 continue;
 
             } catch (Exception e) {
                 //System.out.println(e);
                 operator = tokens.getFirst();
+                if(!lastWasDouble && Objects.equals(operator, "-") )
+                {
+                    output.add("0");
+                }
                 tokens.removeFirst();
+                lastWasDouble = false;
             }
             if (Objects.equals(operator, " ")) {
                 break;
