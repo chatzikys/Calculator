@@ -54,7 +54,7 @@ public class CalcGUI extends JFrame {
                 result = calculator.evaluateExpression(inputField.getText());
                 inputField.setText(result.toString());
             } catch (Exception ex) {
-                inputField.setText("Error");
+                inputField.setText("Error" + ex);
             }
         } else if (buttonLabel.equals("C")) {
             inputField.setText("");
