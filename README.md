@@ -1,4 +1,4 @@
-# Calculator# Calculator 
+# Calcpkg.Calculator# Calcpkg.Calculator 
 ##### _by chatzikys_
 
 Just a calculator app, made in java.

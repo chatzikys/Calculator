@@ -1,3 +1,5 @@
+package Calcpkg;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,7 +11,8 @@ public class CalcGUI extends JFrame {
     public CalcGUI() {
         setTitle("Calculator");
         setLayout(new BorderLayout());
-
+        ImageIcon img = new ImageIcon("assets/icon.png");
+        setIconImage(img.getImage());
         inputField = new JTextField();
         inputField.setHorizontalAlignment(JTextField.RIGHT);
         inputField.setEditable(true);
